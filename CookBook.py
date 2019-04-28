@@ -32,12 +32,12 @@ def get_shop_list_by_dishes(dishes, person_count):
           ingridient_list = cook_book[dish]
           for ingridient in ingridient_list:
               if ingridient['ingridient_name'] not in grocery_dict.keys():
-                grocery_dict[ingridient['ingridient_name']] = {'measure': ingridient['measure'],
-                                                               'quantity': int(ingridient['quantity']) * int(person_count)}
+                grocery_dict[ingridient['ingridient_name']] = \
+                  {'measure': ingridient['measure'], 'quantity': int(ingridient['quantity']) * int(person_count)}
               else:
-                old_quantity = grocery_dict[ingridient['ingridient_name']].pop('quantity')
-                grocery_dict[ingridient['ingridient_name']] = {'measure': ingridient['measure'],
-                                                               'quantity': int(ingridient['quantity']) * int(person_count) + old_quantity}
+                previous_quantity = grocery_dict[ingridient['ingridient_name']].pop('quantity')
+                grocery_dict[ingridient['ingridient_name']] = \
+                  {'measure': ingridient['measure'], 'quantity': int(ingridient['quantity']) * int(person_count) + previous_quantity}
   return grocery_dict
 
 
