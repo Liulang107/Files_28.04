@@ -4,21 +4,22 @@ import json
 # # Получение словаря заданного формата
 
 
-with open('Recipes.txt') as f:
+def get_cook_dictionary(file_path):
   cook_book = {}
-  for line in f:
-    dish = line.strip()
-    ingridients_number = int(f.readline().strip())
-    cook_book[dish] = []
-    ingridient_dict = {}
-    while ingridients_number:
-      ingridient_line = f.readline().strip()
-      ingridient = ingridient_line.split(' | ')
-      ingridient_dict = {'ingridient_name': ingridient[0], 'quantity': ingridient[1], 'measure': ingridient[2]}
-      cook_book[dish].append(ingridient_dict)
-      ingridients_number -= 1
-    f.readline()
-  print(json.dumps(cook_book, ensure_ascii=False, indent=2))
+  with open(file_path) as f:
+    for line in f:
+      dish = line.strip()
+      cook_book[dish] = []
+      ingridient_dict = {}
+      ingridients_number = int(f.readline().strip())
+      while ingridients_number:
+        ingridient_line = f.readline().strip()
+        ingridient = ingridient_line.split(' | ')
+        ingridient_dict = {'ingridient_name': ingridient[0], 'quantity': ingridient[1], 'measure': ingridient[2]}
+        cook_book[dish].append(ingridient_dict)
+        ingridients_number -= 1
+      f.readline()
+  return cook_book
 
 
 # Задача №2
@@ -27,7 +28,11 @@ with open('Recipes.txt') as f:
 
 def get_shop_list_by_dishes(dishes, person_count):
   grocery_dict = {}
-  for dish in dishes:
+  if ', ' in dishes:
+    dishes_list = dishes.split(', ')
+  else: dishes_list = [dishes]
+  cook_book = get_cook_dictionary('Recipes.txt')
+  for dish in dishes_list:
       if dish in cook_book.keys():
           ingridient_list = cook_book[dish]
           for ingridient in ingridient_list:
@@ -41,10 +46,38 @@ def get_shop_list_by_dishes(dishes, person_count):
   return grocery_dict
 
 
+# Вариант 2 (несвязанный с задачей №1)
+
+
+# def get_shop_list_by_dishes(dishes, person_count):
+#   grocery_dict = {}
+#   if ', ' in dishes:
+#     dishes_list = dishes.split(', ')
+#   else: dishes_list = [dishes]
+#   with open('Recipes.txt') as f:
+#     for line in f:
+#       for dish in dishes_list:
+#         if dish in line.strip():
+#           ingridient_number = int(f.readline().strip())
+#           while ingridient_number:
+#             ingridient_line = f.readline().strip()
+#             ingridient = ingridient_line.split(' | ')
+#             if ingridient[0] not in grocery_dict.keys():
+#               grocery_dict[ingridient[0]] = {'measure': ingridient[2], 'quantity': int(ingridient[1]) * int(person_count)}
+#             else:
+#               previous_quantity = grocery_dict[ingridient[0]].pop('quantity')
+#               grocery_dict[ingridient[0]] = {'measure': ingridient[2], 'quantity': int(ingridient[1]) * int(person_count) + previous_quantity}
+#             ingridient_number -= 1
+#           f.readline()
+#   return grocery_dict
+
+
 def main():
+  cook_book = get_cook_dictionary('Recipes.txt')
+  print(json.dumps(cook_book, ensure_ascii=False, indent=2))
   while True:
-    dish_user_input = list(input('Введите блюда, которые нужно приготовить: ').split(', '))
-    if dish_user_input == ['q']:
+    dish_user_input = input('Введите блюда, которые нужно приготовить: ')
+    if dish_user_input == 'q':
       print('До свидания')
       break
     person_user_input = input('Введите количество человек: ')
