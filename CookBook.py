@@ -46,7 +46,7 @@ def get_shop_list_by_dishes(dishes, person_count):
   return grocery_dict
 
 
-# Вариант 2 (несвязанный с задачей №1)
+# Альтернативный вариант, не связанный с задачей №1
 
 
 # def get_shop_list_by_dishes(dishes, person_count):
